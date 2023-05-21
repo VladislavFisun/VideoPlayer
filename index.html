@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <video style="height: 500px" id="video" playsinline controls></video>
+
+    <div>Видео было проиграно <span id="play-count">0</span> секунд</div>
+    <div id="buffer-size"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
