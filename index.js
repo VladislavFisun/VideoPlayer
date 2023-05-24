@@ -34,6 +34,25 @@ document.addEventListener("DOMContentLoaded", function (event) {
       case 32:
         toggleVideo();
         break;
+      case 84:
+        toggleVideoStyles(
+          videoContainer,
+          "theater",
+          document.querySelector(".theater-off"),
+          document.querySelector(".theater-on")
+        );
+        break;
+      case 73:
+        toggleMiniPlayer();
+        break;
+      case 70:
+        toggleVideoStyles(
+          videoContainer,
+          "full-screen",
+          document.querySelector(".full-screen-off"),
+          document.querySelector(".full-screen-on")
+        );
+        break;
     }
   });
 
@@ -163,6 +182,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     videoContainer.dataset.volumeLevel = volumeLevel;
   });
+  //
 
   miniPlayerButton.addEventListener("click", toggleMiniPlayer);
   document.addEventListener("fullscreenchange", () => {
