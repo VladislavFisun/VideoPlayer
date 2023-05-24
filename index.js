@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   function progressUpdate() {
     videoSlider.addEventListener("click", videoControl);
     let current = (video.currentTime * 100) / video.duration;
-    video.bu;
     timeChecker.textContent = `Текущее время: ${video.currentTime.toFixed(
       2
     )} секунд`;
@@ -122,6 +121,34 @@ document.addEventListener("DOMContentLoaded", function (event) {
       document.exitPictureInPicture();
     } else {
       video.requestPictureInPicture();
+    }
+  }
+
+  miniPlayerButton.addEventListener("click", toggleMiniPlayer);
+  document.addEventListener("fullscreenchange", () => {
+    videoContainer.classList.toggle("full-screen"), document.fullscreenElement;
+  });
+  video.addEventListener("enterpictureinpicture", () => {
+    videoContainer.classList.add("mini-player");
+  });
+  video.addEventListener("leavepictureinpicture", () => {
+    videoContainer.classList.remove("mini-player");
+  });
+
+  video.addEventListener("click", toggleVideo);
+  playVideo.addEventListener("click", toggleVideo);
+
+  toggleVideo();
+
+  function toggleVideoStyles(videoElement, classValue, value1, value2) {
+    if (videoElement.classList.contains(classValue)) {
+      videoContainer.classList.remove(classValue);
+      value1.style.display = "none";
+      value2.style.display = "block";
+    } else {
+      videoElement.classList.add(classValue);
+      value1.style.display = "block";
+      value2.style.display = "none";
     }
   }
 
@@ -183,32 +210,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
     videoContainer.dataset.volumeLevel = volumeLevel;
   });
   //
-
-  miniPlayerButton.addEventListener("click", toggleMiniPlayer);
-  document.addEventListener("fullscreenchange", () => {
-    videoContainer.classList.toggle("full-screen"), document.fullscreenElement;
-  });
-  video.addEventListener("enterpictureinpicture", () => {
-    videoContainer.classList.add("mini-player");
-  });
-  video.addEventListener("leavepictureinpicture", () => {
-    videoContainer.classList.remove("mini-player");
-  });
-
-  video.addEventListener("click", toggleVideo);
-  playVideo.addEventListener("click", toggleVideo);
-
-  toggleVideo();
-
-  function toggleVideoStyles(videoElement, classValue, value1, value2) {
-    if (videoElement.classList.contains(classValue)) {
-      videoContainer.classList.remove(classValue);
-      value1.style.display = "none";
-      value2.style.display = "block";
-    } else {
-      videoElement.classList.add(classValue);
-      value1.style.display = "block";
-      value2.style.display = "none";
-    }
-  }
 });
+//

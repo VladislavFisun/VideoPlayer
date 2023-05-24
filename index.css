@@ -2,7 +2,6 @@
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  font-family: "Lato", sans-serif;
 }
 
 *::before,
@@ -16,6 +15,7 @@ body {
   background: #282c34;
   font-size: 16px;
   color: white;
+  font-family: "Lato", sans-serif;
 }
 
 .timeline-container {

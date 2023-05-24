@@ -2,7 +2,6 @@
 $dark: #282c34;
 * {
   box-sizing: border-box;
-  font-family: "Lato", sans-serif;
 }
 *::before,
 *::after {
@@ -13,6 +12,7 @@ body {
   background: $dark;
   font-size: 16px;
   color: white;
+  font-family: "Lato", sans-serif;
 }
 .timeline-container {
   display: flex;
