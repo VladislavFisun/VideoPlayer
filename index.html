@@ -10,10 +10,12 @@
     <div class="video-container" data-volume-level="high">
       <div class="video-controls-container">
         <div class="timeline-container">
-          <div class="timeline">
-            <img class="preview-img" />
-            <div class="thumb-indicator"></div>
-          </div>
+          <progress
+            class="video-slider"
+            style="width: 100%"
+            max="100"
+            value="0"
+          ></progress>
         </div>
         <div class="controls">
           <div class="control-block_left">
@@ -39,8 +41,8 @@
               >
                 <path
                   d="M525-200v-560h235v560H525Zm-325 
-                 0v-560h235v560H200Zm385-60h115v-440H585v440Zm-325 
-                 0h115v-440H260v440Zm0-440v440-440Zm325 0v440-440Z"
+                   0v-560h235v560H200Zm385-60h115v-440H585v440Zm-325 
+                   0h115v-440H260v440Zm0-440v440-440Zm325 0v440-440Z"
                 />
               </svg>
             </div>
@@ -119,9 +121,14 @@
           </div>
         </div>
       </div>
-      <video src="/assets//videos/sample-5s.mp4" class="video"></video>
+      <video class="video"></video>
     </div>
+    <ul class="checkers-list">
+      <p id="current-time_checker">Текущее время: 0 секунд</p>
+      <p id="current-buffer_checker">Размер буффер: 0</p>
+    </ul>
 
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="index.js"></script>
   </body>
 </html>

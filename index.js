@@ -7,13 +7,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
   const theaterVideo = document.getElementById("play-theater");
   const fullScreenVideo = document.getElementById("play-full-screen");
   const miniPlayerButton = document.querySelector(".mini-player");
-  const mutedButton = document.querySelector(".volume-muted-icon");
-  const highVolumeButton = document.querySelector(".volume-high-icon");
   const volumeSlider = document.querySelector(".volume-slider");
   const currentTime = document.querySelector(".current-time");
   const totalTime = document.querySelector(".total-time");
   const speedBtn = document.querySelector(".speed");
-  const timelineContainer = document.querySelector(".timeline-container");
+  const videoSlider = document.querySelector(".video-slider");
+  const timeChecker = document.querySelector("#current-time_checker");
+  const bufferChecker = document.querySelector("#current-buffer_checker");
 
   function toggleVideo() {
     if (videoContainer.classList.contains("paused")) {
@@ -29,50 +29,57 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 
-  //start
-  timelineContainer.addEventListener("mousemove", handleTimelineUpdate);
-  timelineContainer.addEventListener("mousedown", toggleScrubbing);
-  document.addEventListener("mouseup", (e) => {
-    if (isScrubbing) toggleScrubbing(e);
-  });
-  document.addEventListener("mousemove", (e) => {
-    if (isScrubbing) handleTimelineUpdate(e);
+  document.addEventListener("keydown", (event) => {
+    switch (event.keyCode) {
+      case 32:
+        toggleVideo();
+        break;
+    }
   });
 
-  let isScrubbing = false;
-  let wasPaused;
-  function toggleScrubbing(e) {
-    const rect = timelineContainer.getBoundingClientRect();
-    const percent =
-      Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
-    isScrubbing = (e.buttons & 1) === 1;
-    videoContainer.classList.toggle("scrubbing", isScrubbing);
-    if (isScrubbing) {
-      wasPaused = video.paused;
-      video.pause();
-    } else {
-      video.currentTime = percent * video.duration;
-      if (!wasPaused) video.play();
-    }
+  //подключение hls
+  const hls = new Hls();
+  if (Hls.isSupported()) {
+    hls.loadSource(
+      "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+    );
 
-    handleTimelineUpdate(e);
+    hls.attachMedia(video);
+    window.hls = hls;
+  }
+  //
+
+  //видео слайдер
+  video.ontimeupdate = progressUpdate;
+
+  function progressUpdate() {
+    videoSlider.addEventListener("click", videoControl);
+    let current = (video.currentTime * 100) / video.duration;
+    video.bu;
+    timeChecker.textContent = `Текущее время: ${video.currentTime.toFixed(
+      2
+    )} секунд`;
+    videoSlider.value = current;
   }
 
-  function handleTimelineUpdate(e) {
-    const rect = timelineContainer.getBoundingClientRect();
-    const percent =
-      Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
-
-    timelineContainer.style.setProperty("--preview-position", percent);
-
-    if (isScrubbing) {
-      e.preventDefault();
-
-      timelineContainer.style.setProperty("--progress-position", percent);
+  video.addEventListener("progress", function () {
+    var buffered = video.buffered;
+    if (buffered.length > 0) {
+      var bufferedSize = buffered.end(buffered.length - 1).toFixed(2);
+      bufferChecker.innerHTML = `Размер буффера:  ${bufferedSize}`;
     }
-  }
+  });
 
-  //end
+  function videoControl(event) {
+    let w = this.offsetWidth;
+    let o = event.offsetX;
+    this.value = (100 * o) / w;
+
+    video.currentTime = video.duration * (o / w);
+  }
+  //
+
+  // форматы видео
   theaterVideo.addEventListener("click", () => {
     toggleVideoStyles(
       videoContainer,
@@ -81,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       document.querySelector(".theater-on")
     );
   });
+
   fullScreenVideo.addEventListener("click", () => {
     toggleVideoStyles(
       videoContainer,
@@ -90,13 +98,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
     );
   });
 
+  function toggleMiniPlayer() {
+    if (videoContainer.classList.contains("mini-player")) {
+      document.exitPictureInPicture();
+    } else {
+      video.requestPictureInPicture();
+    }
+  }
+
+  //
+
+  //Скорость видео
+
   speedBtn.addEventListener("click", () => {
     let newPlaybackRate = video.playbackRate + 0.25;
     if (newPlaybackRate > 2) newPlaybackRate = 0.25;
     video.playbackRate = newPlaybackRate;
     speedBtn.textContent = `x${newPlaybackRate}`;
   });
-  video.playbackRate;
+
+  //
+
+  // Длительность и текущий момент видео
 
   video.addEventListener("loadeddata", () => {
     totalTime.textContent = `/${formatDuration(video.duration)}`;
@@ -105,14 +128,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   video.addEventListener("timeupdate", () => {
     currentTime.textContent = formatDuration(video.currentTime);
   });
-
-  function toggleMiniPlayer() {
-    if (videoContainer.classList.contains("mini-player")) {
-      document.exitPictureInPicture();
-    } else {
-      video.requestPictureInPicture();
-    }
-  }
 
   function formatDuration(time) {
     const seconds = Math.floor(time % 60);
@@ -126,8 +141,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
     return `${hours}:${minutes}:${formatedSeconds}`;
   }
 
+  //
+
+  //переключатель громкости
+
   volumeSlider.addEventListener("input", (e) => {
-    console.log(e.target.value);
     video.volume = e.target.value;
     video.muted = e.target.value === 0;
   });
@@ -160,13 +178,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   video.addEventListener("click", toggleVideo);
   playVideo.addEventListener("click", toggleVideo);
 
-  document.addEventListener("keydown", (event) => {
-    switch (event.keyCode) {
-      case 32:
-        toggleVideo();
-        break;
-    }
-  });
   toggleVideo();
 
   function toggleVideoStyles(videoElement, classValue, value1, value2) {

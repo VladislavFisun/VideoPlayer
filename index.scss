@@ -11,10 +11,31 @@ $dark: #282c34;
 body {
   margin: 0;
   background: $dark;
-  font-size: 12px;
+  font-size: 16px;
+  color: white;
+}
+.timeline-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  padding: 0 15px;
+}
+
+.main_container {
+  margin-inline: auto;
+  width: 80%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
 }
 video {
   width: 100%;
+}
+.checkers-list {
+  text-transform: uppercase;
+  margin-inline: auto;
+  width: 80%;
+  max-width: 1000px;
 }
 
 .video-container {
